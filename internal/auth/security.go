@@ -17,14 +17,21 @@ type JWTClaims struct {
 	AccountID          string `json:"sub"`
 	NIM                string `json:"nim"`
 	Role               string `json:"role"`
+	TOTPVerified       bool   `json:"totp_verified"`
 	MustChangePassword bool   `json:"must_change_password"`
 	jwt.RegisteredClaims
 }
 
 func GenerateTokens(accountID, nim, role string, mustChange bool, secret []byte) (string, string, error) {
 	accessClaims := JWTClaims{
-		accountID, nim, role, mustChange,
-		jwt.RegisteredClaims{ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute))},
+		AccountID:          accountID,
+		NIM:                nim,
+		Role:               role,
+		MustChangePassword: mustChange,
+		TOTPVerified:       false,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
+		},
 	}
 	accessToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, accessClaims).SignedString(secret)
 	if err != nil {

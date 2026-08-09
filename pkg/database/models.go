@@ -6,6 +6,7 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
@@ -21,6 +22,14 @@ type Account struct {
 	MustChangePassword bool         `json:"must_change_password"`
 	CreatedAt          sql.NullTime `json:"created_at"`
 	UpdatedAt          sql.NullTime `json:"updated_at"`
+}
+
+type AdminTotpSecret struct {
+	AccountID   uuid.UUID       `json:"account_id"`
+	TotpSecret  string          `json:"totp_secret"`
+	IsVerified  bool            `json:"is_verified"`
+	BackupCodes json.RawMessage `json:"backup_codes"`
+	CreatedAt   sql.NullTime    `json:"created_at"`
 }
 
 type AuditLog struct {
@@ -40,6 +49,17 @@ type PasswordResetToken struct {
 	ExpiresAt time.Time    `json:"expires_at"`
 	UsedAt    sql.NullTime `json:"used_at"`
 	CreatedAt sql.NullTime `json:"created_at"`
+}
+
+type Profile struct {
+	AccountID uuid.UUID      `json:"account_id"`
+	FullName  string         `json:"full_name"`
+	Nickname  sql.NullString `json:"nickname"`
+	Email     sql.NullString `json:"email"`
+	Bio       sql.NullString `json:"bio"`
+	IsPublic  bool           `json:"is_public"`
+	CreatedAt sql.NullTime   `json:"created_at"`
+	UpdatedAt sql.NullTime   `json:"updated_at"`
 }
 
 type RefreshToken struct {

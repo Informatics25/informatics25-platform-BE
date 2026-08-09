@@ -11,17 +11,25 @@ import (
 )
 
 type Querier interface {
+	CreateAccount(ctx context.Context, arg CreateAccountParams) (CreateAccountRow, error)
 	CreatePasswordResetToken(ctx context.Context, arg CreatePasswordResetTokenParams) (PasswordResetToken, error)
+	CreateProfile(ctx context.Context, arg CreateProfileParams) error
 	CreateRefreshToken(ctx context.Context, arg CreateRefreshTokenParams) (RefreshToken, error)
+	CreateTOTPSecret(ctx context.Context, arg CreateTOTPSecretParams) error
 	GetAccountByID(ctx context.Context, id uuid.UUID) (GetAccountByIDRow, error)
 	GetAccountByNIM(ctx context.Context, nim string) (Account, error)
 	GetPasswordResetToken(ctx context.Context, tokenHash string) (GetPasswordResetTokenRow, error)
+	GetProfileByAccountID(ctx context.Context, accountID uuid.UUID) (GetProfileByAccountIDRow, error)
 	GetRefreshToken(ctx context.Context, tokenHash string) (GetRefreshTokenRow, error)
+	GetTOTPSecret(ctx context.Context, accountID uuid.UUID) (GetTOTPSecretRow, error)
 	InsertAuditLog(ctx context.Context, arg InsertAuditLogParams) error
 	MarkPasswordResetTokenAsUsed(ctx context.Context, id uuid.UUID) error
 	RevokeAllAccountRefreshTokens(ctx context.Context, accountID uuid.UUID) error
 	RevokeRefreshToken(ctx context.Context, tokenHash string) error
+	SuspendAccount(ctx context.Context, id uuid.UUID) error
 	UpdatePassword(ctx context.Context, arg UpdatePasswordParams) error
+	UpdateProfile(ctx context.Context, arg UpdateProfileParams) error
+	VerifyTOTP(ctx context.Context, accountID uuid.UUID) error
 }
 
 var _ Querier = (*Queries)(nil)
