@@ -93,3 +93,7 @@ func (h *Handler) AdminResetPassword(c echo.Context) error {
 		"default_password": defaultPass,
 	})
 }
+
+func NewHandler(service *Service) *Handler {
+	return &Handler{Service: service}
+}
